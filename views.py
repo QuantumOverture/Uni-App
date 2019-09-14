@@ -5,11 +5,19 @@ from .forms import RedirectToUni
 import json
 import requests
 
+def MajorNamesList(Majors):
+    pass
+
+
 @sensitive_variables()
 def SpecificUni(request,NAME,ID):
+    # (ANTHING BETWEEN THESE TWO IS EXTRA INFO AND NOT PART OF API CALL)
+    # Replace _ with spaces when providing extra info
+    Majors = [
+             ]
     # Here forward to ID - Star rating - Text Review in Database fields
     # error check here if ID of school exists or not and NAME  exists in the the university's title
-    # ApiKey = PLEASE GET AT THE api.data.gov site 
+    # ApiKey = PLEASE GO TO https://api.data.gov
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     Fields = "&_fields=school.name,school.state," \
              "school.ownership,latest.admissions.admission_rate.overall," \
@@ -19,7 +27,12 @@ def SpecificUni(request,NAME,ID):
              "latest.earnings.10_yrs_after_entry.working_not_enrolled.mean_earnings,latest.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings," \
              "latest.student.grad_students,latest.cost.program_reporter.program_1.cip_6_digit.full_program," \
              "school.region_id,school.degree_urbanization,school.school_url," \
-             "school.carnegie_basic,school.carnegie_size_setting,"
+             "school.carnegie_basic,school.carnegie_size_setting,school.city," \
+             "student.demographics.first_generation,completion.completion_rate_4yr_100nt," \
+             "school.religious_affiliation,student.demographics.race_ethnicity.white," \
+             "student.demographics.race_ethnicity.black,student.demographics.race_ethnicity.asian" \
+             "student.demographics.race_ethnicity.hispanic,student.demographics.race_ethnicity.aian," \
+             "student.demographics.race_ethnicity.nhpi"+ MajorNamesList(Majors)
 
     WebSiteResponse = requests.get(URL+'id='+str(ID)+Fields+"&api_key="+ApiKey)
     WebsiteJSON = json.loads(WebSiteResponse.text)
@@ -42,15 +55,18 @@ def SpecificUni(request,NAME,ID):
         "median_debt":WebsiteJSON["results"][0]["latest.aid.median_debt.completers.overall"],
         "top_program_cost":WebsiteJSON["results"][0]["latest.cost.program_reporter.program_1.cip_6_digit.full_program"],
         "region": WebsiteJSON["results"][0]["school.region_id"],
-        "town_type":WebsiteJSON["results"][0]["degree_urbanization"],
-
+        "town_type":WebsiteJSON["results"][0]["school.degree_urbanization"],
+        "url":WebsiteJSON["results"][0]["school.school_url"],
+        "school_type":WebsiteJSON["results"][0]["school.carnegie_basic"],
+        "setting_size":WebsiteJSON["results"][0]["school.carnegie_size_setting"],
+        "city":WebsiteJSON["results"][0]["school.city"],
     }
     print(WebSiteResponse.text)
-    return render(request,'MainApp/SpecificUni.html',{"ID":ID,"NAME":NAME})
+    return render(request,'MainApp/SpecificUni.html',content)
 
 @sensitive_variables()
 def UniReport(request,UniName):
-    # ApiKey = PLEASE GET AT THE api.data.gov site 
+    # ApiKey = PLEASE GO TO https://api.data.gov
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     UniName = UniName.replace(" ","%20")
     Fields = "&_fields=school.name,id,school.state,school.ownership"
