@@ -14,6 +14,15 @@ def SpecificUni(request,NAME,ID):
     # (ANTHING BETWEEN THESE TWO IS EXTRA INFO AND NOT PART OF API CALL)
     # Replace _ with spaces when providing extra info
     Majors = [
+              "agriculture","(natural_)resources(_and_conservation)","architecture","ethnic_cultural_gender(_studies)",
+              "communication","communications_technology","computer(_science_and_information studies)","personal(_and)_culinary(_studies)",
+              "education","engineering","engineering_technology(_and_engineering_related field)","(foreign_)language(_,literature,and_linguistics)",
+              "family(_and)_consumer_science","legal(_profession_and_studies)","english","humanities","library(_science)","biological(_and_biomedical_science)",
+              "mathematics","military(_technology_and_applied_sciences)","multidiscipline","parks_recreation_fitness(_studies)",
+              "philosophy_religious","theology_religious_vocation","physical_science","science_technology","psychology","security_law_enforcement",
+              "public_administration(_and)_social_service","social_science","construction","mechanic_(and_)repair_technology",
+              "precision_production","transportation","visual_performing(_arts)","health","business_marketing","history"
+             
              ]
     # Here forward to ID - Star rating - Text Review in Database fields
     # error check here if ID of school exists or not and NAME  exists in the the university's title
