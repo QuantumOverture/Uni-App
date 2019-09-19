@@ -6,6 +6,42 @@
     <br>
     <a href="/result/{{ NAME }}">GO BACK TO THE RESULT PAGE</a>
 
-    <h1>{{ ID }}</h1>
+    <h1>{{ Proper_NAME }}</h1>
+    <img src="//logo.clearbit.com/{{ url }}" style="display: block;margin:auto;width:100px;height:100px;border:2px black solid;border-radius: 7%;"/>
+    <h3>Cost of attendance: {{ Cost_Of_Attendance }}</h3>
+    <h3>Student enrollment: {{ Student_enrollment  }}</h3>
+    <h3>10 years post earning: {{ 10_years_avg_earnings  }}</h3>
+    <h3>Number of grad students: {{ Number_of_grad_students }}</h3>
+    <h3>Total in-debt Students: {{ Number_of_in_debt_students  }}</h3>
+    <h3>School type: {{ School_type  }}</h3>
+    <h3>Principle Loan: {{ Principle_Loan  }}</h3>
+    <h3>6 years post earning: {{ 6_years_avg_earnings  }}</h3>
+    <h3>Admission rate: {{ admission_rate  }}</h3>
+    <h3>State: {{ state  }}</h3>
+    <h3>Average Family Income(During Program):{{ average_family_income  }}</h3>
+    <h3>Median Debt:{{ median_debt  }}</h3>
+    <h3>Top Program Cost:{{ top_program_cost  }}</h3>
+    <h3>Town Type: {{ town_type }}</h3>
+    <h3>URL: {{ url }}</h3>
+    <h3>Average SAT: {{ Average_SAT }}</h3>
+    <h3>School Type: {{ school_type }}</h3>
+    <h3>Setting Size: {{ setting_size }}</h3>
 
+    {% for i in major_list %}
+        <h3>{{ i }}% </h3>
+    {% endfor %}
+
+    <h3>City: {{ city }}</h3>
+    <h3>Weather: {{ region }}</h3>
+    <h3>Percentage of Male Students: {{ percent_men }}</h3>
+    <h3>Percentage of Female Students: {{ percent_women }}</h3>
+    <h3>First Gen: {{ first_gen }}</h3>
+    <h3>Four year completion rate: {{ four_year_completion }}</h3>
+    <h3>Religious Affiliation: {{ religious_affiliation }}</h3>
+    <h3>Percentage of People identifying as White: {{ race_white }}</h3>
+    <h3>Percentage of People identifying as Black: {{ race_black }}</h3>
+    <h3>Percentage of People identifying as Asian: {{ race_asian }}</h3>
+    <h3>Percentage of People identifying as American Asian: {{ race_aian }}</h3>
+    <h3>Percentage of People identifying as Pacific Islander: {{ race_nhpi }}</h3>
+    <h3>Percentage of People identifying as Hispanic: {{ race_hispanic }}</h3>
 {% endblock %}
