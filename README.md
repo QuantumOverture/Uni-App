@@ -14,12 +14,20 @@ Autofill 'University of' and 'College' and 'University' in Get sections of homep
 To Do list:
 
 * Implement Pagination
-* Report button
+* Report button and Comment Section
 * Error pages for urls
 * Attribution
-* MOAR DATA
-* Add link attribution to APIs
+[✓] MOAR DATA
+* Add link attribution to APIs --> ClearBit has special rules
 * LOGO
-* FIX API CALLS
-* Add financial info analysis
+[✓] FIX API CALLS (College ScoreCard)
+* Add financial info analysis and more analysis in general
+	(*) Get total number of enrolled undergrads --> get major percentage --> show approx. fellow majors size in major 
+
 * Majors: least taken(that which not zero),most taken, all major precentages
+* If null reported from api --> write "Not Reported"
+* If 0.0% in major --> "Not offered or not taken"
+* Make categories for each set of info
+* Captialize majors properly
+* Add missing Data
+* Correct integer data to readable data
