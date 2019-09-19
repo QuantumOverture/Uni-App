@@ -17,9 +17,11 @@ To Do list:
 * Report button and Comment Section
 * Error pages for urls
 * Attribution
+
 [✓] MOAR DATA
 * Add link attribution to APIs --> ClearBit has special rules
 * LOGO
+
 [✓] FIX API CALLS (College ScoreCard)
 * Add financial info analysis and more analysis in general
 	(*) Get total number of enrolled undergrads --> get major percentage --> show approx. fellow majors size in major 
