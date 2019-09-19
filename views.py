@@ -34,6 +34,8 @@ def MajorNamesList(Majors):
 
     return ResultString
 
+def AddExtraInfo(Major_String):
+    return Major_String.replace("(","").replace(")","").replace("_"," ")
 
 @sensitive_variables()
 def SpecificUni(request,NAME,ID):
@@ -48,7 +50,7 @@ def SpecificUni(request,NAME,ID):
              ]
     # Here forward to ID - Star rating - Text Review in Database fields
     # error check here if ID of school exists or not and NAME  exists in the the university's title
-    # ApiKey = 'PLEASE GO TO API.DATA.GOV for a key or search for it on Google or your favorite search engine'
+    # ApiKey = 'No no, not in my house'
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     Fields = "&_fields=school.name,school.state," \
              "school.ownership,latest.admissions.admission_rate.overall," \
@@ -73,6 +75,7 @@ def SpecificUni(request,NAME,ID):
         "NAME":NAME,
         "Proper_NAME":WebsiteJSON["results"][0]["school.name"],
         "Cost_Of_Attendance": WebsiteJSON["results"][0]["latest.cost.attendance.academic_year"],
+        "Average_SAT" :WebsiteJSON["results"][0]["latest.admissions.sat_scores.average.overall"],
         "Student_enrollment": WebsiteJSON["results"][0]["latest.student.enrollment.all"],
         "10_years_avg_earnings":WebsiteJSON["results"][0]["latest.earnings.10_yrs_after_entry.working_not_enrolled.mean_earnings"],
         "Number_of_grad_students": WebsiteJSON["results"][0]["latest.student.grad_students"],
@@ -80,7 +83,7 @@ def SpecificUni(request,NAME,ID):
         "School_type": WebsiteJSON["results"][0]["school.ownership"],
         "Principle_Loan": WebsiteJSON["results"][0]["latest.aid.loan_principal"],
         "6_years_avg_earnings": WebsiteJSON["results"][0]["latest.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings"],
-        "admission_rate":WebsiteJSON["results"][0]["latest.admissions.admission_rate.overall"],
+        "admission_rate":round(WebsiteJSON["results"][0]["latest.admissions.admission_rate.overall"] * 100,2),
         "state":WebsiteJSON["results"][0]["school.state"],
         "average_family_income":WebsiteJSON["results"][0]["latest.student.demographics.avg_family_income"],
         "median_debt":WebsiteJSON["results"][0]["latest.aid.median_debt.completers.overall"],
@@ -91,28 +94,30 @@ def SpecificUni(request,NAME,ID):
         "school_type":WebsiteJSON["results"][0]["school.carnegie_basic"],
         "setting_size":WebsiteJSON["results"][0]["school.carnegie_size_setting"],
         "city":WebsiteJSON["results"][0]["school.city"],
-        "percent_men": WebsiteJSON["results"][0]["latest.student.demographics.men"],
-        "percent_women": WebsiteJSON["results"][0]["latest.student.demographics.women"],
-        "first_gen": WebsiteJSON["results"][0]["latest.student.demographics.first_generation"],
-        "four_year_completion":WebsiteJSON["results"][0]["latest.completion.completion_rate_4yr_100nt"],
+        "percent_men": round(WebsiteJSON["results"][0]["latest.student.demographics.men"] * 100,2),
+        "percent_women": round(WebsiteJSON["results"][0]["latest.student.demographics.women"] * 100,2),
+        "first_gen": round(WebsiteJSON["results"][0]["latest.student.demographics.first_generation"] * 100,2),
+        "four_year_completion":round(WebsiteJSON["results"][0]["latest.completion.completion_rate_4yr_100nt"] * 100,2),
         "religious_affiliation":WebsiteJSON["results"][0]["school.religious_affiliation"],
-        "race_white":WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.white"],
-        "race_black": WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.black"],
-        "race_asian": WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.asian"],
-        "race_aian": WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.aian"],
-        "race_nhpi": WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.nhpi"],
-        "race_hispanic": WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.hispanic"],
+        "race_white": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.white"] * 100,2),
+        "race_black": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.black"] * 100,2),
+        "race_asian": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.asian"] * 100,2),
+        "race_aian": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.aian"] * 100,2),
+        "race_nhpi": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.nhpi"] * 100,2),
+        "race_hispanic": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.hispanic"] * 100,2),
     }
 
     # add percentage of majors to content
+    MajorList = []
     for z in Majors:
-        content[RemoveExtraInfo(z)] = WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100
+        MajorList.append(AddExtraInfo(z)+": "+str(round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2)))
+    content["major_list"] = MajorList
 
     return render(request,'MainApp/SpecificUni.html',content)
 
 @sensitive_variables()
 def UniReport(request,UniName):
-    # ApiKey = 'PLEASE GO TO API.DATA.GOV for a key or search for it on Google or your favorite search engine'
+    # ApiKey = 'No no, not in my house'
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     UniName = UniName.replace(" ","%20")
     Fields = "&_fields=school.name,id,school.state,school.ownership"
