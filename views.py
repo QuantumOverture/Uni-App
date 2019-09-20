@@ -50,7 +50,7 @@ def SpecificUni(request,NAME,ID):
              ]
     # Here forward to ID - Star rating - Text Review in Database fields
     # error check here if ID of school exists or not and NAME  exists in the the university's title
-    # ApiKey = 'No no, not in my house'
+    # ApiKey = 'NOPE'
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     Fields = "&_fields=school.name,school.state," \
              "school.ownership,latest.admissions.admission_rate.overall," \
@@ -107,17 +107,171 @@ def SpecificUni(request,NAME,ID):
         "race_hispanic": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.hispanic"] * 100,2),
     }
 
+    # get integer data into proper format
+
+    School_type_dict = {1:"Public",2:"Private(Non-Profit)",3:"Private(For-Profit)"}
+    School_type_cg_dict = { None:"None",
+                            0:"NOT CLASSIFIED",
+                            -2:"NOT APPLICABLE",
+                            1:"Associate's Colleges: High Transfer-High Traditional",
+                            2:"Associate's Colleges: High Transfer-Mixed Traditional/Nontraditional",
+                            3:"Associate's Colleges: High Transfer-High Nontraditional",
+                            4:"Associate's Colleges: Mixed Transfer/Career & Technical-High Traditional",
+                            5:"Associate's Colleges: Mixed Transfer/Career & Technical-Mixed Traditional/Nontraditional",
+                            6:"Associate's Colleges: Mixed Transfer/Career & Technical-High Nontraditional",
+                            7:"Associate's Colleges: High Career & Technical-High Traditional",
+                            8:"Associate's Colleges: High Career & Technical-Mixed Traditional/Nontraditional",
+                            9:"Associate's Colleges: High Career & Technical-High Nontraditional",
+                            10:"Special Focus Two-Year: Health Professions",
+                            11:"Special Focus Two-Year: Technical Professions",
+                            12:"Special Focus Two-Year: Arts & Design",
+                            13:"Special Focus Two-Year: Other Fields",
+                            14:"Baccalaureate/Associate's Colleges: Associate's Dominant",
+                            15:"Doctoral Universities: Very High Research Activity",
+                            16:"Doctoral Universities: High Research Activity",
+                            17:"Doctoral/Professional Universities",
+                            18:"Master's Colleges & Universities: Larger Programs",
+                            19:"Master's Colleges & Universities: Medium Programs",
+                            20:"Master's Colleges & Universities: Small Programs",
+                            21:"Baccalaureate Colleges: Arts & Sciences Focus",
+                            22:"Baccalaureate Colleges: Diverse Fields",
+                            23:"Baccalaureate/Associate's Colleges: Mixed Baccalaureate/Associate's",
+                            24:"Special Focus Four-Year: Faith-Related Institutions",
+                            25:"Special Focus Four-Year: Medical Schools & Centers",
+                            26:"Special Focus Four-Year: Other Health Professions Schools",
+                            27:"Special Focus Four-Year: Engineering Schools",
+                            28:"Special Focus Four-Year: Other Technology-Related Schools",
+                            29:"Special Focus Four-Year: Business & Management Schools",
+                            30:"Special Focus Four-Year: Arts, Music & Design Schools",
+                            31:"Special Focus Four-Year: Law Schools",
+                            32:"Special Focus Four-Year: Other Special Focus Institutions",
+                            33:"Tribal Colleges"
+                        }
+    setting_size_dict = {None:"None",
+                         0:"NOT CLASSIFIED",
+                        -2:"NOT APPLICABLE",
+                        1:"Two-year, very small",
+                        2:"Two-year, small",
+                        3:"Two-year, medium",
+                        4:"Two-year, large",
+                        5:"Two-year, very large",
+                        6:"Four-year, very small, primarily nonresidential",
+                        7:"Four-year, very small, primarily residential",
+                        8:"Four-year, very small, highly residential",
+                        9:"Four-year, small, primarily nonresidential",
+                        10:"Four-year, small, primarily residential",
+                        11:"Four-year, small, highly residential",
+                        12:"Four-year, medium, primarily nonresidential",
+                        13:"Four-year, medium, primarily residential",
+                        14:"Four-year, medium, highly residential",
+                        15:"Four-year, large, primarily nonresidential",
+                        16:"Four-year, large, primarily residential",
+                        17:"Four-year, large, highly residential",
+                        18:"Exclusively graduate/professional"
+                        }
+    region_weather_dict = {0:"US Service School( Please Research on own )",1:"warm to hot summers and super cold winters",
+                           2:"cool to cold winters and hot,humid summers",
+                           3:"warm to hot summers and super cold winters",
+                           4:"warm to hot summers and super cold winters",
+                           5:"mild winters and humid,hot summers",
+                           6:"mild winters and EXTREME dry summers",
+                           7:"cool and wet in every season expect summer(where it is dry)",
+                           8:"Dry and hot summers with mild to cold winters",
+                           9:"Outlying Areas ( Please Research on own )"
+                           }
+
+    religious_afflil_dict={  None:"None",
+                            -1:"Not reported",
+                            -2:"Not applicable",
+                            22:"American Evangelical Lutheran Church",
+                            24:"African Methodist Episcopal Zion Church",
+                            27:"Assemblies of God Church",
+                            28:"Brethren Church",
+                            30:"Roman Catholic",
+                            33:"Wisconsin Evangelical Lutheran Synod",
+                            34:"Christ and Missionary Alliance Church",
+                            35:"Christian Reformed Church",
+                            36:"Evangelical Congregational Church",
+                            37:"Evangelical Covenant Church of America",
+                            38:"Evangelical Free Church of America",
+                            39:"Evangelical Lutheran Church",
+                            40:"International United Pentecostal Church",
+                            41:"Free Will Baptist Church",
+                            42:"Interdenominational",
+                            43:"Mennonite Brethren Church",
+                            44:"Moravian Church",
+                            45:"North American Baptist",
+                            47:"Pentecostal Holiness Church",
+                            48:"Christian Churches and Churches of Christ",
+                            49:"Reformed Church in America",
+                            50:"Episcopal Church, Reformed",
+                            51:"African Methodist Episcopal",
+                            52:"American Baptist",
+                            53:"American Lutheran",
+                            54:"Baptist",
+                            55:"Christian Methodist Episcopal",
+                            57:"Church of God",
+                            58:"Church of Brethren",
+                            59:"Church of the Nazarene",
+                            60:"Cumberland Presbyterian",
+                            61:"Christian Church (Disciples of Christ)",
+                            64:"Free Methodist",
+                            65:"Friends",
+                            66:"Presbyterian Church (USA)",
+                            67:"Lutheran Church in America",
+                            68:"Lutheran Church - Missouri Synod",
+                            69:"Mennonite Church",
+                            71:"United Methodist",
+                            73:"Protestant Episcopal",
+                            74:"Churches of Christ",
+                            75:"Southern Baptist",
+                            76:"United Church of Christ",
+                            77:"Protestant, not specified",
+                            78:"Multiple Protestant Denomination",
+                            79:"Other Protestant",
+                            80:"Jewish",
+                            81:"Reformed Presbyterian Church",
+                            84:"United Brethren Church",
+                            87:"Missionary Church Inc",
+                            88:"Undenominational",
+                            89:"Wesleyan",
+                            91:"Greek Orthodox",
+                            92:"Russian Orthodox",
+                            93:"Unitarian Universalist",
+                            94:"Latter Day Saints (Mormon Church)",
+                            95:"Seventh Day Adventists",
+                            97:"The Presbyterian Church in America",
+                            99:"Other (none of the above)",
+                            100:"Original Free Will Baptist",
+                            101:"Ecumenical Christian",
+                            102:"Evangelical Christian",
+                            103:"Presbyterian",
+                            105:"General Baptist",
+                            106:"Muslim",
+                            107:"Plymouth Brethren"
+
+    }
+
+
+    content["School_type"] = School_type_dict[content["School_type"]]
+    content["school_type"] = School_type_cg_dict[content["school_type"]]
+    content["setting_size"] = setting_size_dict[content["setting_size"]]
+    content["region"] = region_weather_dict[content["region"]]
+    content["religious_affiliation"] = religious_afflil_dict[content["religious_affiliation"]]
     # add percentage of majors to content
     MajorList = []
     for z in Majors:
-        MajorList.append(AddExtraInfo(z)+": "+str(round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2)))
+        MajorList.append(AddExtraInfo(z)+": "+str(round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2))
+                         +"%  [ Around :"+str(round(content["Student_enrollment"] * WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)]))
+                         +" Students ] "
+                         )
     content["major_list"] = MajorList
 
     return render(request,'MainApp/SpecificUni.html',content)
 
 @sensitive_variables()
 def UniReport(request,UniName):
-    # ApiKey = 'No no, not in my house'
+    # ApiKey = 'NOPE'
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     UniName = UniName.replace(" ","%20")
     Fields = "&_fields=school.name,id,school.state,school.ownership"
