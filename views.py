@@ -38,7 +38,7 @@ def AddExtraInfo(Major_String):
     return Major_String.replace("(","").replace(")","").replace("_"," ")
 
 @sensitive_variables()
-def SpecificUni(request,NAME,ID):
+def SpecificUni(request,NAME,PgNum,ID):
     Majors = ["agriculture","(natural_)resources(_and_conservation)","architecture","ethnic_cultural_gender(_studies)",
               "communication","communications_technology","computer(_science_and_information studies)","personal(_and)_culinary(_studies)",
               "education","engineering","engineering_technology(_and_engineering_related field)","(foreign_)language(_,literature,and_linguistics)",
@@ -50,7 +50,7 @@ def SpecificUni(request,NAME,ID):
              ]
     # Here forward to ID - Star rating - Text Review in Database fields
     # error check here if ID of school exists or not and NAME  exists in the the university's title
-    ApiKey = '1-800-NOPE'
+    ApiKey = ''
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     Fields = "&_fields=school.name,school.state," \
              "school.ownership,latest.admissions.admission_rate.overall," \
@@ -71,6 +71,7 @@ def SpecificUni(request,NAME,ID):
     WebsiteJSON = json.loads(WebSiteResponse.text)
 
     content = {
+        "PgNum": PgNum,
         "ID": ID,
         "NAME":NAME,
         "Proper_NAME":WebsiteJSON["results"][0]["school.name"],
@@ -280,17 +281,17 @@ def SpecificUni(request,NAME,ID):
     return render(request,'MainApp/SpecificUni.html',content)
 
 @sensitive_variables()
-def UniReport(request,UniName):
-    ApiKey = '1-800-NOPE'
+def UniReport(request,UniName,PgNum):
+    ApiKey = ''
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     UniName = UniName.replace(" ","%20")
     Fields = "&_fields=school.name,id,school.state,school.ownership"
 
-    WebSiteResponse = requests.get(URL+'school.name='+UniName+Fields+"&api_key="+ApiKey)
+    WebSiteResponse = requests.get(URL+'school.name='+UniName+Fields+"&api_key="+ApiKey+'&_page='+str(PgNum - 1))
     WebsiteJSON = json.loads(WebSiteResponse.text)
 
 
-    content = { "UniName":UniName,"UniList" :[] }
+    content = { "UniName":UniName,"UniList" :[] ,"PgNum":PgNum ,"results":WebsiteJSON['metadata']['total'] // 20}
 
     for i in WebsiteJSON["results"]:
         content["UniList"].append({"schoolname":i["school.name"],"ID":i["id"],"state":i["school.state"],"ownership":i["school.ownership"]})
@@ -307,7 +308,7 @@ def HomePage(request):
         if RedirectBar.is_valid():
             UniName = RedirectBar.cleaned_data['UniName']
             # Show User result(zero or more) before redirect and let them choose ==> Or redirect to result page then take to uni
-            return redirect("result/"+UniName)
+            return redirect("result/"+UniName+'/1')
     else:
         RedirectBar = RedirectToUni()
     content = {
