@@ -9,6 +9,8 @@
     <h1>{{ Proper_NAME }}</h1>
     <img src="//logo.clearbit.com/{{ url }}" style="display: block;margin:auto;width:100px;height:100px;border:2px black solid;border-radius: 7%;"/>
     <h3>Cost of attendance: {{ Cost_Of_Attendance }}</h3>
+    <h3>6 year "Profit" : {{ 6_Year_Profit }}</h3>
+    <h3>10 year "Profit" : {{ 10_Year_Profit }}</h3>
     <h3>Student enrollment: {{ Student_enrollment  }}</h3>
     <h3>10 years post earning: {{ 10_years_avg_earnings  }}</h3>
     <h3>Number of grad students: {{ Number_of_grad_students }}</h3>
@@ -24,15 +26,16 @@
     <h3>Town Type: {{ town_type }}</h3>
     <h3>URL: {{ url }}</h3>
     <h3>Average SAT: {{ Average_SAT }}</h3>
-    <h3>School Type: {{ school_type }}</h3>
+    <h3>School Type(Carnegie): {{ school_type }}</h3>
     <h3>Setting Size: {{ setting_size }}</h3>
-
+    <h3>Most Take Major(or one of the most taken majors): {{ Max_Major.1 }} at {{ Max_Major.0}}%</h3>
+    <h3>Least Taken Major(or one of the least taken majors): {{ Min_Major.1 }} at {{ Min_Major.0}}%</h3>
     {% for i in major_list %}
-        <h3>{{ i }}% </h3>
+        <h3>{{ i }}</h3>
     {% endfor %}
 
     <h3>City: {{ city }}</h3>
-    <h3>Weather: {{ region }}</h3>
+    <h3>Weather(<a src="https://en.wikipedia.org/wiki/Climate_of_the_United_States">Source</a>): {{ region }} (Disclaimer: This is a general approximation)</h3>
     <h3>Percentage of Male Students: {{ percent_men }}</h3>
     <h3>Percentage of Female Students: {{ percent_women }}</h3>
     <h3>First Gen: {{ first_gen }}</h3>
