@@ -50,7 +50,7 @@ def SpecificUni(request,NAME,ID):
              ]
     # Here forward to ID - Star rating - Text Review in Database fields
     # error check here if ID of school exists or not and NAME  exists in the the university's title
-    # ApiKey = 'NOPE'
+    ApiKey = '1-800-NOPE'
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     Fields = "&_fields=school.name,school.state," \
              "school.ownership,latest.admissions.admission_rate.overall," \
@@ -75,6 +75,8 @@ def SpecificUni(request,NAME,ID):
         "NAME":NAME,
         "Proper_NAME":WebsiteJSON["results"][0]["school.name"],
         "Cost_Of_Attendance": WebsiteJSON["results"][0]["latest.cost.attendance.academic_year"],
+        "6_Year_Profit": WebsiteJSON["results"][0]["latest.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings"] - WebsiteJSON["results"][0]["latest.cost.attendance.academic_year"],
+        "10_Year_Profit": WebsiteJSON["results"][0]["latest.earnings.10_yrs_after_entry.working_not_enrolled.mean_earnings"] - WebsiteJSON["results"][0]["latest.cost.attendance.academic_year"],
         "Average_SAT" :WebsiteJSON["results"][0]["latest.admissions.sat_scores.average.overall"],
         "Student_enrollment": WebsiteJSON["results"][0]["latest.student.enrollment.all"],
         "10_years_avg_earnings":WebsiteJSON["results"][0]["latest.earnings.10_yrs_after_entry.working_not_enrolled.mean_earnings"],
@@ -83,7 +85,7 @@ def SpecificUni(request,NAME,ID):
         "School_type": WebsiteJSON["results"][0]["school.ownership"],
         "Principle_Loan": WebsiteJSON["results"][0]["latest.aid.loan_principal"],
         "6_years_avg_earnings": WebsiteJSON["results"][0]["latest.earnings.6_yrs_after_entry.working_not_enrolled.mean_earnings"],
-        "admission_rate":round(WebsiteJSON["results"][0]["latest.admissions.admission_rate.overall"] * 100,2),
+        "admission_rate":round(WebsiteJSON["results"][0]["latest.admissions.admission_rate.overall"] ,2),
         "state":WebsiteJSON["results"][0]["school.state"],
         "average_family_income":WebsiteJSON["results"][0]["latest.student.demographics.avg_family_income"],
         "median_debt":WebsiteJSON["results"][0]["latest.aid.median_debt.completers.overall"],
@@ -108,7 +110,6 @@ def SpecificUni(request,NAME,ID):
     }
 
     # get integer data into proper format
-
     School_type_dict = {1:"Public",2:"Private(Non-Profit)",3:"Private(For-Profit)"}
     School_type_cg_dict = { None:"None",
                             0:"NOT CLASSIFIED",
@@ -260,18 +261,27 @@ def SpecificUni(request,NAME,ID):
     content["religious_affiliation"] = religious_afflil_dict[content["religious_affiliation"]]
     # add percentage of majors to content
     MajorList = []
+    MaxMjr = [float('-inf'),"None"]
+    MinMjr = [float('+inf'),"None"]
     for z in Majors:
         MajorList.append(AddExtraInfo(z)+": "+str(round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2))
                          +"%  [ Around :"+str(round(content["Student_enrollment"] * WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)]))
                          +" Students ] "
                          )
+        if round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2) > MaxMjr[0]:
+            MaxMjr = [round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2),AddExtraInfo(z)]
+        elif  round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2) < MinMjr[0] and  round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2) != 0.0:
+            MinMjr = [round(WebsiteJSON["results"][0]["latest.academics.program_percentage."+RemoveExtraInfo(z)] * 100,2),AddExtraInfo(z)]
     content["major_list"] = MajorList
+    content["Max_Major"] = MaxMjr
+    content["Min_Major"] = MinMjr
+
 
     return render(request,'MainApp/SpecificUni.html',content)
 
 @sensitive_variables()
 def UniReport(request,UniName):
-    # ApiKey = 'NOPE'
+    ApiKey = '1-800-NOPE'
     URL = 'https://api.data.gov/ed/collegescorecard/v1/schools?'
     UniName = UniName.replace(" ","%20")
     Fields = "&_fields=school.name,id,school.state,school.ownership"
