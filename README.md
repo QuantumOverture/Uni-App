@@ -8,16 +8,17 @@ I am not responsible for any bad college descisions you make(or incorrect info y
 # Current To Do List
 Uni App --> College ScoreBoard Api,Reviews,and extra metrics
 
-Autofill 'University of' and 'College' and 'University' in Get sections of homepage
 
 To Do list:
 
+* Autofill 'University of' and 'College' and 'University' in Get sections of homepage
 [✓] Implement Pagination
-* Report button and Comment Section
+* Report button and [✓] Comment Section
+* Add Better CSS and styling for (base only will work on it with friend) Comment Section
 * Error pages for urls
-* Most taken/least taken Error for single major colleges {e.g CalArts}
+* Most taken/least taken Error for single major colleges(Mathify Data and handle none Properly) {e.g CalArts}
 * Attribution
-* None type for numerical data
+* Customize admin page for report button
 [✓] MOAR DATA
 * Add link attribution to APIs --> ClearBit has special rules
 [✓] LOGO
@@ -30,7 +31,11 @@ To Do list:
 * If 0.0% in major --> "Not offered or not taken"
 * Make categories for each set of info
 * Captialize majors properly
-* Add missing Data
+[✓] Add missing Data
 * Correct integer data to readable data
+
+
+
+
 
 
