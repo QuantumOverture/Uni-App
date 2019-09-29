@@ -47,4 +47,14 @@
     <h3>Percentage of People identifying as American Asian: {{ race_aian }}</h3>
     <h3>Percentage of People identifying as Pacific Islander: {{ race_nhpi }}</h3>
     <h3>Percentage of People identifying as Hispanic: {{ race_hispanic }}</h3>
+
+    <h1>Comments: </h1>
+    {% for i in Comments %}
+        <h1>{{ i }}</h1>
+    {% endfor %}
+
+    <form method="post">{% csrf_token %}
+            {{ CommentSection.as_table }}
+            <button style="display: inline;"type="submit">Submit!</button>
+        </form>
 {% endblock %}
