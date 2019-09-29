@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.debug import sensitive_variables
-from .forms import RedirectToUni
+from .forms import RedirectToUni,UserReview
+from .models import UniComment
+import random
 import json
 import requests
 
+def Mathify(content):
+   pass
 
 def RemoveExtraInfo(Major_String):
     OpenBracketIndex = -1
@@ -39,6 +43,17 @@ def AddExtraInfo(Major_String):
 
 @sensitive_variables()
 def SpecificUni(request,NAME,PgNum,ID):
+    Comment = UserReview()
+    if request.method == 'POST':
+        Comment = UserReview(request.POST)
+        if Comment.is_valid():
+            Obj = Comment.save(commit=False)
+            Obj.UniID = ID
+            Obj.CommentID = "".join([str(random.randint(0,9)) for i in range(0,90)])
+            Obj.save()
+
+            return redirect(request.path_info)
+
     Majors = ["agriculture","(natural_)resources(_and_conservation)","architecture","ethnic_cultural_gender(_studies)",
               "communication","communications_technology","computer(_science_and_information studies)","personal(_and)_culinary(_studies)",
               "education","engineering","engineering_technology(_and_engineering_related field)","(foreign_)language(_,literature,and_linguistics)",
@@ -70,7 +85,20 @@ def SpecificUni(request,NAME,PgNum,ID):
     WebSiteResponse = requests.get(URL+'id='+str(ID)+Fields+"&api_key="+ApiKey)
     WebsiteJSON = json.loads(WebSiteResponse.text)
 
+    # Comment Creation
+    CommentAndRatings = []
+
+    for i in list(UniComment.objects.filter(UniID=ID).values('Comment')):
+        CommentAndRatings.append(str(i))
+    counter = 0
+    for z in list(UniComment.objects.filter(UniID=ID).values('StarRating')):
+        CommentAndRatings[counter] += str(z)
+        counter += 1
+
+
     content = {
+        "CommentSection": Comment,
+        "Comments": CommentAndRatings,
         "PgNum": PgNum,
         "ID": ID,
         "NAME":NAME,
@@ -109,7 +137,8 @@ def SpecificUni(request,NAME,PgNum,ID):
         "race_nhpi": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.nhpi"] * 100,2),
         "race_hispanic": round(WebsiteJSON["results"][0]["latest.student.demographics.race_ethnicity.hispanic"] * 100,2),
     }
-
+    # Add math to content and check if it possible
+    Mathify(content)
     # get integer data into proper format
     School_type_dict = {1:"Public",2:"Private(Non-Profit)",3:"Private(For-Profit)"}
     School_type_cg_dict = { None:"None",
