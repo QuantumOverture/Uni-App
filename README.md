@@ -12,17 +12,18 @@ Uni App --> College ScoreBoard Api,Reviews,and extra metrics
 To Do list:
 
 * Autofill 'University of' and 'College' and 'University' in Get sections of homepage
-[✓] Implement Pagination
-* Report button and [✓] Comment Section
+* [✓] Implement Pagination
+* Report button and 
+* [✓] Comment Section
 * Add Better CSS and styling for (base only will work on it with friend) Comment Section
 * Error pages for urls
 * Most taken/least taken Error for single major colleges(Mathify Data and handle none Properly) {e.g CalArts}
 * Attribution
 * Customize admin page for report button
-[✓] MOAR DATA
+* [✓] MOAR DATA
 * Add link attribution to APIs --> ClearBit has special rules
-[✓] LOGO
-[✓] FIX API CALLS (College ScoreCard)
+* [✓] LOGO
+* [✓] FIX API CALLS (College ScoreCard)
 * Add financial info analysis and more analysis in general
 	(✓) Get total number of enrolled undergrads --> get major percentage --> show approx. fellow majors size in major 
 	(*) 10 and 6 year --> show if it pays off and by how much
@@ -31,7 +32,7 @@ To Do list:
 * If 0.0% in major --> "Not offered or not taken"
 * Make categories for each set of info
 * Captialize majors properly
-[✓] Add missing Data
+* [✓] Add missing Data
 * Correct integer data to readable data
 
 
